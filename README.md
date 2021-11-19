@@ -17,7 +17,7 @@ docker run --rm -it --name dc -v ${pwd}:/input pmsipilot/docker-compose-viz rend
 
 ## Tech stack
 | Technology      | Version  | Task     |
-| -       |    :-:   |      -  |       ---- |
+| -       |    :-:   |       ---- |
 | [Apache Kafka](https://kafka.apache.org/)      | latest       |  Message broker cluster to structure the amount of heterogeneous data by topics and distribute it to various consumers, including Logstash.   |
 | [Apache Zookeeper](https://zookeeper.apache.org/) |   latest      |   Apache Zookeeper takes care of the administration of the distributed systems in the pipeline. In particular, this acts as a coordinator for Apache Kafka.    |
 | [Docker](https://www.docker.com/) |       latest  |  Serves the underlying infrastructure to link the individual technologies in a modular way to make their use platform-independent and straightforward. This makes the deployment of the "Analytics Pipeline" a breeze.
