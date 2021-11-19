@@ -1,10 +1,10 @@
 # TwinSIGHT
 
-[![Branch master](https://github.com/philipempl/TwinSIGHT/actions/workflows/master.yml/badge.svg)](https://github.com/philipempl/TwinSIGHT/actions/workflows/master.yml)
+[![Continuous Integration](https://github.com/philipempl/TwinSIGHT/actions/workflows/master.yml/badge.svg)](https://github.com/philipempl/TwinSIGHT/actions/workflows/master.yml)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/philipempl/TwinSIGHT.svg)](http://isitmaintained.com/project/philipempl/TwinSIGHT "Percentage of issues still open")
 [![GitHub forks](https://img.shields.io/github/forks/philipempl/TwinSIGHT)](https://github.com/philipempl/TwinSIGHT/network)
 [![GitHub stars](https://img.shields.io/github/stars/philipempl/TwinSIGHT)](https://github.com/philipempl/TwinSIGHT/stargazers)
-[![GitHub license](https://img.shields.io/github/license/philipempl/TwinSIGHT)](https://github.com/philipempl/TwinSIGHT)
+[![GitHub license](https://img.shields.io/github/license/philipempl/TwinSIGHT)](https://github.com/philipempl/TwinSIGHT/blob/master/LICENSE.md)
 
 ## Introduction
 Digital Twins map physical artifacts to virtual representations depending on a pre-defined fidelity and sharpen the bidirectional communication of the physical and virtual world in the Industrial IoT. Digital Twins also manage semantics, i.e., ontologies and relations between functional components and data. The Digital Twin is an ideal foundation to perform security analytics in die Industrial IoT. Security analytics is Big Data analytics from a cybersecurity perspective and aims at protecting devices by analyzing and correlating data from various data sources. Analytical results can be shared among lifecycles participants through Digital Twins to communicate the overall security state of a physical artifact. This paper presents a framework that integrates security analytics into a Digital Twin, enables the contextualization of data, and thus, converts data to knowledge about incidents.
@@ -41,7 +41,9 @@ docker-compose up --build --force-recreate
 ```
 ### Run the drill & mill machine client
 #### Dependencies
+```python
 pip install -r requirements.txt
+```
 #### Command
 ```python
 py /machine_client/client.py
@@ -49,7 +51,7 @@ py /machine_client/client.py
 
 ### Call the UIs
 ```html
-http://localhost:5601 (Kibana)
+http://localhost:5601 (Kibana/Wazuh)
 http://localhost:9000 (Kafka UI)
 http://localhost:18083 (EMQ X)
 ```
