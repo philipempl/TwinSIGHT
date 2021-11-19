@@ -11,19 +11,10 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
     networks:
-      - data_hub
+      - information_domain
 
-#---------------------------------------- Redis --------------------------------------------------------
-
-#  redis:
-#    image: bitnami/redis:latest
-#    ports:
-#      - 6379:6379
-#    networks:
-#      - data_hub
-      
 #---------------------------------------- MQTT Broker and Bridge ---------------------------------------
-      
+
   emqx:
     image: emqx/emqx:4.2.7
     hostname: emqx
@@ -35,26 +26,7 @@ services:
       - "8883:8883"
       - "18083:18083"
     networks:
-      - data_hub 
-
-      
-  mqtt2kafka:
-    image: marmaechler/mqtt2kafkabridge:latest
-    hostname: mqtt2kafka
-    container_name: mqtt2kafka
-    depends_on:
-      - kafka1
-      - emqx
-    restart: always
-    environment:
-      KAFKA_BROKER_HOST: kafka1:19091
-      MQTT_BROKER_HOST: emqx:1883
-      CLIENT_ID: MQTT2Kafka
-      MQTT_TOPIC_FILTER: LENZDRGB611
-    volumes:
-      - ./volumes/mqtt2kafkabridge/logs:/opt/mqtt2kafkabridge/logs
-    networks:
-      - data_hub
+      - information_domain
 
 #---------------------------------------- Ditto (Digital Twin) -------------------------------------------
 
@@ -66,10 +38,10 @@ services:
     ports:
       - "27017:27017"
     networks:
-      data_hub:
+      information_domain:
         aliases:
           - mongodb
-      
+
   ditto-policies:
     image: docker.io/eclipse/ditto-policies:${DITTO_VERSION:-latest}
     mem_limit: 384m
@@ -84,16 +56,16 @@ services:
     # -Dditto.policies...
     command: java -jar starter.jar
     networks:
-      data_hub:
+      information_domain:
         aliases:
           - ditto-cluster
-      
+
   ditto-things:
     image: docker.io/eclipse/ditto-things:${DITTO_VERSION:-latest}
     mem_limit: 384m
     container_name: ditto_things
     depends_on:
-      - policies
+      - ditto-policies
     environment:
       - TZ=Europe/Berlin
       - INSTANCE_INDEX=1
@@ -104,10 +76,10 @@ services:
     # -Dditto.things...
     command: java -jar starter.jar
     networks:
-      data_hub:
+      information_domain:
         aliases:
           - ditto-cluster
-      
+
   ditto-thingssearch:
     image: docker.io/eclipse/ditto-things-search:${DITTO_VERSION:-latest}
     mem_limit: 384m
@@ -124,10 +96,10 @@ services:
     # -Dditto.things-search...
     command: java -jar starter.jar
     networks:
-      data_hub:
+      information_domain:
         aliases:
           - ditto-cluster
-      
+
   ditto-concierge:
     image: docker.io/eclipse/ditto-concierge:${DITTO_VERSION:-latest}
     mem_limit: 384m
@@ -144,10 +116,10 @@ services:
     # -Dditto.concierge...
     command: java -jar starter.jar
     networks:
-      data_hub:
+      information_domain:
         aliases:
           - ditto-cluster
-      
+
   ditto-connectivity:
     image: docker.io/eclipse/ditto-connectivity:${DITTO_VERSION:-latest}
     mem_limit: 384m
@@ -165,8 +137,8 @@ services:
     # -Dditto.connectivity...
     command: java -jar starter.jar
     networks:
-      - data_hub
-      
+      - information_domain
+
   ditto-gateway:
     image: docker.io/eclipse/ditto-gateway:${DITTO_VERSION:-latest}
     mem_limit: 384m
@@ -189,10 +161,10 @@ services:
     # Setting the devops password via java VM environment
     command: java -Dditto.gateway.authentication.devops.password=foobar -jar starter.jar
     networks:
-      data_hub:
+      information_domain:
         aliases:
           - ditto-cluster
-      
+
   ditto-swaggerui:
     image: docker.io/swaggerapi/swagger-ui:v3.38.0
     container_name: ditto_swaggerui
@@ -202,8 +174,8 @@ services:
        - ./volumes/ditto/swagger3-index.html:/usr/share/nginx/html/index.html:ro
     command: nginx -g 'daemon off;'
     networks:
-      - data_hub
-      
+      - information_domain
+
   ditto-nginx:
     image: docker.io/nginx:1.19-alpine
     container_name: ditto_nginx
@@ -219,7 +191,7 @@ services:
       - ditto-gateway
       - ditto-swaggerui
     networks:
-      - data_hub
+      - information_domain
 #---------------------------------------- Kafka -----------------------------------------------------
 
   kafka1:
@@ -240,7 +212,7 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
-      - data_hub
+      - information_domain
     volumes:
       - ./volumes/kafka1/data:/var/lib/kafka/data
     depends_on:
@@ -266,7 +238,7 @@ services:
       KAFKA_BROKER_ID: 2
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
-      - data_hub
+      - information_domain
     volumes:
       - ./volumes/kafka2/data:/var/lib/kafka/data
     depends_on:
@@ -292,89 +264,14 @@ services:
       KAFKA_BROKER_ID: 3
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
-      - data_hub
+      - information_domain
     volumes:
       - ./volumes/kafka3/data:/var/lib/kafka/data
     depends_on:
       - "zookeeper"
     links:
       - "zookeeper"
-     
- # schema-registry:
- #   image: confluentinc/cp-schema-registry:5.4.0
- #   hostname: schema-registry
- #   container_name: schema-registry
- #   depends_on:
- #     - zookeeper
- #     - kafka1
- #   ports:
- #     - "8081:8081"
- #   environment:
- #     SCHEMA_REGISTRY_HOST_NAME: schema-registry
- #     SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
- #     
- # kafka-connect:
- #   image: confluentinc/cp-kafka-connect:5.4.0
- #   hostname: kafka-connect
- #   container_name: kafka-connect
- #   depends_on:
- #     - broker
- #     - schema-registry
- #   ports:
- #     - "8083:8083"
- #   environment:
- #     CONNECT_BOOTSTRAP_SERVERS: "kafka1:19091"
- #     CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
- #     CONNECT_REST_PORT: 8083
- #     CONNECT_GROUP_ID: kafka-connect
- #     CONNECT_CONFIG_STORAGE_TOPIC: kafka-connect-configs
- #     CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
- #     CONNECT_OFFSET_FLUSH_INTERVAL_MS: 10000
- #     CONNECT_OFFSET_STORAGE_TOPIC: kafka-connect-offsets
- #     CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
- #     CONNECT_STATUS_STORAGE_TOPIC: kafka-connect-status
- #     CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
- #     CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
- #     CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
- #     CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
- #     CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
- #     CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
- #     CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
- #     CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
- #     CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
- #   command:
- #       - /bin/bash
- #       - -c
- #       - /
- #         cd /usr/share/java/kafka-connect-mqtt/
- #         curl https://packages.confluent.io/maven/io/confluent/kafka-mqtt/6.1.0/kafka-mqtt-6.1.0.jar -o kafka-mqtt-6.1.0.jar
- #         /etc/confluent/docker/run 
- #         
- #         sleep infinity
 
- #   depends_on:
- #     - zookeeper
- #     - kafka1
- #     - emqx
- #   networks:
- #     - data_hub
- #     
- # kafka-connect-ui:
- #   image: landoop/kafka-connect-ui:latest
- #   hostname: kafka-connect-ui
- #   container_name: kafka-connect-ui
- #   ports:
- #     - "9001:8000"
- #   environment:
- #     CONNECT_URL: "kafka-connect:8083"
- #     PROXY: "true"
- #   depends_on:
- #     - kafka-connect
- #   restart: always
- #   networks:
- #     - data_hub
- #   
- 
   kafka-ui:
     image: provectuslabs/kafka-ui
     container_name: kafka-ui
@@ -386,12 +283,12 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:19091
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
     networks:
-      - data_hub
+      - information_domain
     depends_on:
       - kafka1
       - kafka2
       - kafka3
-      
+
 #---------------------------------------- ELK Stack ----------------------------------------------------
 
   elasticsearch:
@@ -407,7 +304,7 @@ services:
       - type: volume
         source: elasticsearch
         target: /usr/share/elasticsearch/data
-    expose: 
+    expose:
       - "9200"
       - "9300"
     environment:
@@ -418,7 +315,7 @@ services:
       # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
       discovery.type: single-node
     networks:
-      - batch_layer
+      - information_domain
 
   logstash:
     hostname: logstash
@@ -442,8 +339,7 @@ services:
     environment:
       LS_JAVA_OPTS: "-Xmx512m -Xms512m"
     networks:
-      - data_hub
-      - batch_layer
+      - information_domain
     depends_on:
       - elasticsearch
       - kafka1
@@ -466,58 +362,11 @@ services:
     ports:
       - "5601:5601"
     networks:
-      - batch_layer
+      - business_domain
+      - information_domain
     depends_on:
       - elasticsearch
       - wazuh
-    
-
-#---------------------------------------- Flink  -----------------------------------------------------------
-
-#  pyflink:
-#    hostname: pyflink
-#    build:
-#      context: ./volumes/flink/
-#    volumes:
-#      - ./volumes/flink/jobs:/opt/volumes/flink/jobs
-#    networks:
-#      - speed_layer
-#    depends_on:
-#      - jobmanager
-#      - taskmanager
-  
-#  jobmanager:
-#    image: pyflink/playgrounds:1.10.0
-#    volumes:
-#      - ./examples:/opt/examples
-#    hostname: "jobmanager"
-#    expose:
-#      - "6123"
-#    ports:
-#      - "8333:8333"
-#    command: jobmanager
-#    environment:
-#      - JOB_MANAGER_RPC_ADDRESS=jobmanager
-#    networks:
-#      - speed_layer
-#      
-#  taskmanager:
-#    image: pyflink/playgrounds:1.10.0
-#    volumes:
-#      - ./examples:/opt/examples
-#    expose:
-#      - "6121"
-#      - "6122"
-#    depends_on:
-#      - jobmanager
-#    command: taskmanager
-#    links:
-#      - jobmanager:jobmanager
-#    environment:
-#      - JOB_MANAGER_RPC_ADDRESS=jobmanager
-#    networks:
-#      - speed_layer
-
 
 #---------------------------------------- Wazuh ---------------------------------------------------------------
   wazuh:
@@ -534,9 +383,9 @@ services:
       ELASTICSEARCH_URL: "http://elasticsearch:9200"
       ELASTIC_USERNAME: elastic
       ELASTIC_PASSWORD: changeme
-      FILEBEAT_SSL_VERIFICATION_MODE: none  
+      FILEBEAT_SSL_VERIFICATION_MODE: none
       API_USERNAME: "adlheid"                               # Wazuh API username
-      API_PASSWORD: "IacXSo?aDiQcixj9"  
+      API_PASSWORD: "IacXSo?aDiQcixj9"
     volumes:
       - ossec_api_configuration:/var/ossec/api/configuration
       - ossec_etc:/var/ossec/etc
@@ -552,9 +401,9 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - batch_layer
+      - information_domain
 #---------------------------------------- Volumes and Networks ------------------------------------------------
-      
+
 volumes:
   elasticsearch:
   ossec_api_configuration:
@@ -569,11 +418,7 @@ volumes:
   filebeat_etc:
   filebeat_var:
 networks:
-  data_hub:
+  information_domain:
     driver: bridge
-  batch_layer:
+  business_domain:
     driver: bridge
-  speed_layer:
-    driver: bridge
-
-    
