@@ -28,7 +28,7 @@ docker run --rm -it --name dc -v ${pwd}:/input pmsipilot/docker-compose-viz rend
 | [Logstash](https://www.elastic.co/logstash) |        7.10.1 | Logstash collects the messages from the individual Kafka topics and, using various filters, can preprocess the data before it is stored in Elasticsearch. |
 
 
-## Deploy
+## Deployment
 
 ### Build the infrastructure
 The simple variant of deployment without changing the configuration files:
@@ -41,7 +41,7 @@ docker-compose up --build --force-recreate
 ```
 ### Run the drill & mill machine client
 #### Dependencies
-TODO
+pip install -r requirements.txt
 #### Command
 ```python
 py /machine_client/client.py
