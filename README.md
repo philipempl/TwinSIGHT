@@ -17,11 +17,11 @@ docker run --rm -it --name dc -v ${pwd}:/input pmsipilot/docker-compose-viz rend
 
 ## Tech stack
 | Technology      | Version  | Task     |
-| -       |    :-:   |       ---- |
+| -       |    -   |      :-: |
 | [Apache Kafka](https://kafka.apache.org/)      | latest       |  Message broker cluster to structure the amount of heterogeneous data by topics and distribute it to various consumers, including Logstash.   |
 | [Apache Zookeeper](https://zookeeper.apache.org/) |   latest      |   Apache Zookeeper takes care of the administration of the distributed systems in the pipeline. In particular, this acts as a coordinator for Apache Kafka.    |
 | [Docker](https://www.docker.com/) |       latest  |  Serves the underlying infrastructure to link the individual technologies in a modular way to make their use platform-independent and straightforward. This makes the deployment of the "Analytics Pipeline" a breeze.
-| [Elasticsearch](https://www.elastic.co/elasticsearch/)    | 7.10.1    Elasticsearch represents the data store to index all the data based on a particular topic. Moreover, the use of Elasticsearch in IoT is appropriate to make the data search more efficient.   |
+| [Elasticsearch](https://www.elastic.co/elasticsearch/)    | 7.10.1  |   Elasticsearch represents the data store to index all the data based on a particular topic. Moreover, the use of Elasticsearch in IoT is appropriate to make the data search more efficient.   |
 | [EMQ X](https://www.emqx.io/) |        latest   |EMQ X is the messaging broker and the gateway into the analytics pipeline. EMQ X acts as a broker and connects all IoT devices and edge nodes using the MQTT protocol and specific topics.|
 | [Kafka UI](https://github.com/provectus/kafka-ui) |        latest  | Kafka UI simplifies the administration of a Kafka cluster by visualizing the Topics, Consumers, Producers and Brokers.
 | [Kibana](https://www.elastic.co/kibana) |        7.10.1     |Kibana is used for pure visualization of incoming data streams and batch data. Besides, users could also use machine learning algorithms to gain essential insights from the data. |
