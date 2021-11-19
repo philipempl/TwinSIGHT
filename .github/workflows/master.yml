@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: preparation
-        run: docker-compose down && docker kill $(docker ps -qa) && docker rm -v $(docker ps -qa) && docker rmi $(docker images -q)
+        run: docker-compose down && docker container prune --force && docker system prune -a --force && docker system prune --volumes --force
 
       - name: setup environment
         run: docker-compose up --d
