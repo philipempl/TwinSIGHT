@@ -13,7 +13,7 @@ services:
     networks:
       - information_domain
 
-#---------------------------------------- MQTT Broker and Bridge ---------------------------------------
+#---------------------------------------- MQTT Broker  --------------------------------------------------
 
   emqx:
     image: emqx/emqx:4.2.7
@@ -22,7 +22,6 @@ services:
     restart: always
     ports:
       - "1883:1883"
-      - "8084:8084"
       - "8883:8883"
       - "18083:18083"
     networks:
@@ -30,40 +29,51 @@ services:
 
 #---------------------------------------- Ditto (Digital Twin) -------------------------------------------
 
-  ditto-mongodb:
+  mongodb:
     image: docker.io/mongo:4.2
-    container_name: ditto_mongodb
+    hostname: mongodb
+    networks:
+      default:
+        aliases:
+          - mongodb
     command: mongod --storageEngine wiredTiger --noscripting
     user: mongodb
     ports:
-      - "27017:27017"
-    networks:
-      information_domain:
-        aliases:
-          - mongodb
+      - 27017:27017
+    environment:
+       TZ: Europe/Berlin
 
   ditto-policies:
     image: docker.io/eclipse/ditto-policies:${DITTO_VERSION:-latest}
-    mem_limit: 384m
-    container_name: ditto_policies
+    hostname: ditto-policies
+    mem_limit: 512m
+    networks:
+      default:
+        aliases:
+          - ditto-cluster
     environment:
       - TZ=Europe/Berlin
       - INSTANCE_INDEX=1
       - BIND_HOSTNAME=0.0.0.0
       - OPENJ9_JAVA_OPTIONS=-XX:+ExitOnOutOfMemoryError -Xtune:virtualized -Xss512k -XX:MaxRAMPercentage=80 -Dakka.coordinated-shutdown.exit-jvm=on -Dakka.cluster.shutdown-after-unsuccessful-join-seed-nodes=120s
       - MONGO_DB_HOSTNAME=mongodb
+      # in order to write logs into a file you can enable this by setting the following env variable
+      # the log file(s) can be found in /var/log/ditto directory on the host machine
+      # - DITTO_LOGGING_FILE_APPENDER=true
     # Set additional configuration options here
-    # -Dditto.policies...
+    # -Dditto.ditto-policies...
     command: java -jar starter.jar
-    networks:
-      information_domain:
-        aliases:
-          - ditto-cluster
+    # only needed if DITTO_LOGGING_FILE_APPENDER is set
+    # volumes:
+    #  - ditto_log_files:/var/log/ditto
 
   ditto-things:
     image: docker.io/eclipse/ditto-things:${DITTO_VERSION:-latest}
-    mem_limit: 384m
-    container_name: ditto_things
+    mem_limit: 512m
+    networks:
+      default:
+        aliases:
+          - ditto-cluster
     depends_on:
       - ditto-policies
     environment:
@@ -72,18 +82,24 @@ services:
       - BIND_HOSTNAME=0.0.0.0
       - OPENJ9_JAVA_OPTIONS=-XX:+ExitOnOutOfMemoryError -Xtune:virtualized -Xss512k -XX:MaxRAMPercentage=80 -Dakka.coordinated-shutdown.exit-jvm=on -Dakka.cluster.shutdown-after-unsuccessful-join-seed-nodes=120s
       - MONGO_DB_HOSTNAME=mongodb
+      # in order to write logs into a file you can enable this by setting the following env variable
+      # the log file(s) can be found in /var/log/ditto directory on the host machine
+      # - DITTO_LOGGING_FILE_APPENDER=true
     # Set additional configuration options here
     # -Dditto.things...
     command: java -jar starter.jar
+    # only needed if DITTO_LOGGING_FILE_APPENDER is set
+    # volumes:
+    #  - ditto_log_files:/var/log/ditto
+
+  ditto-things-search:
+    image: docker.io/eclipse/ditto-things-search:${DITTO_VERSION:-latest}
+    hostname: ditto-things-search
+    mem_limit: 512m
     networks:
-      information_domain:
+      default:
         aliases:
           - ditto-cluster
-
-  ditto-thingssearch:
-    image: docker.io/eclipse/ditto-things-search:${DITTO_VERSION:-latest}
-    mem_limit: 384m
-    container_name: ditto_thingssearch
     depends_on:
       - ditto-policies
     environment:
@@ -92,18 +108,24 @@ services:
       - BIND_HOSTNAME=0.0.0.0
       - OPENJ9_JAVA_OPTIONS=-XX:+ExitOnOutOfMemoryError -Xtune:virtualized -Xss512k -XX:MaxRAMPercentage=80 -Dakka.coordinated-shutdown.exit-jvm=on -Dakka.cluster.shutdown-after-unsuccessful-join-seed-nodes=120s
       - MONGO_DB_HOSTNAME=mongodb
+      # in order to write logs into a file you can enable this by setting the following env variable
+      # the log file(s) can be found in /var/log/ditto directory on the host machine
+      # - DITTO_LOGGING_FILE_APPENDER=true
     # Set additional configuration options here
     # -Dditto.things-search...
     command: java -jar starter.jar
-    networks:
-      information_domain:
-        aliases:
-          - ditto-cluster
+    # only needed if DITTO_LOGGING_FILE_APPENDER is set
+    # volumes:
+    #  - ditto_log_files:/var/log/ditto
 
   ditto-concierge:
     image: docker.io/eclipse/ditto-concierge:${DITTO_VERSION:-latest}
-    mem_limit: 384m
-    container_name: ditto_concierge
+    hostname: ditto-concierge
+    mem_limit: 512m
+    networks:
+      default:
+        aliases:
+          - ditto-cluster
     depends_on:
       - ditto-policies
     environment:
@@ -112,18 +134,24 @@ services:
       - BIND_HOSTNAME=0.0.0.0
       - OPENJ9_JAVA_OPTIONS=-XX:+ExitOnOutOfMemoryError -Xtune:virtualized -Xss512k -XX:MaxRAMPercentage=80 -Dakka.coordinated-shutdown.exit-jvm=on -Dakka.cluster.shutdown-after-unsuccessful-join-seed-nodes=120s
       - MONGO_DB_HOSTNAME=mongodb
+      # in order to write logs into a file you can enable this by setting the following env variable
+      # the log file(s) can be found in /var/log/ditto directory on the host machine
+      # - DITTO_LOGGING_FILE_APPENDER=true
     # Set additional configuration options here
     # -Dditto.concierge...
     command: java -jar starter.jar
-    networks:
-      information_domain:
-        aliases:
-          - ditto-cluster
+    # only needed if DITTO_LOGGING_FILE_APPENDER is set
+    # volumes:
+    #  - ditto_log_files:/var/log/ditto
 
   ditto-connectivity:
     image: docker.io/eclipse/ditto-connectivity:${DITTO_VERSION:-latest}
-    mem_limit: 384m
-    container_name: ditto_connectivity
+    hostname: ditto-connectivity
+    mem_limit: 768m
+    networks:
+      default:
+        aliases:
+          - ditto-cluster
     depends_on:
       - ditto-policies
       - ditto-concierge
@@ -133,16 +161,24 @@ services:
       - BIND_HOSTNAME=0.0.0.0
       - OPENJ9_JAVA_OPTIONS=-XX:+ExitOnOutOfMemoryError -Xtune:virtualized -Xss512k -XX:MaxRAMPercentage=80 -Dakka.coordinated-shutdown.exit-jvm=on -Dakka.cluster.shutdown-after-unsuccessful-join-seed-nodes=120s
       - MONGO_DB_HOSTNAME=mongodb
+      # in order to write logs into a file you can enable this by setting the following env variable
+      # the log file(s) can be found in /var/log/ditto directory on the host machine
+      # - DITTO_LOGGING_FILE_APPENDER=true
     # Set additional configuration options here
     # -Dditto.connectivity...
     command: java -jar starter.jar
-    networks:
-      - information_domain
+    # only needed if DITTO_LOGGING_FILE_APPENDER is set
+    #volumes:
+    #  - ditto_log_files:/var/log/ditto
 
   ditto-gateway:
     image: docker.io/eclipse/ditto-gateway:${DITTO_VERSION:-latest}
-    mem_limit: 384m
-    container_name: ditto_gateway
+    hostname: ditto-gateway
+    mem_limit: 512m
+    networks:
+      default:
+        aliases:
+          - ditto-cluster
     depends_on:
       - ditto-policies
       - ditto-concierge
@@ -154,44 +190,43 @@ services:
       - BIND_HOSTNAME=0.0.0.0
       - ENABLE_PRE_AUTHENTICATION=true
       - OPENJ9_JAVA_OPTIONS=-XX:+ExitOnOutOfMemoryError -Xtune:virtualized -Xss512k -XX:MaxRAMPercentage=80 -Dakka.coordinated-shutdown.exit-jvm=on -Dakka.cluster.shutdown-after-unsuccessful-join-seed-nodes=120s
+      # in order to write logs into a file you can enable this by setting the following env variable
+      # the log file(s) can be found in /var/log/ditto directory on the host machine
+      # - DITTO_LOGGING_FILE_APPENDER=true
       # You may use the environment for setting the devops password
       #- DEVOPS_PASSWORD=foobar
     # Set additional configuration options here
     # -Dditto.gateway...
     # Setting the devops password via java VM environment
     command: java -Dditto.gateway.authentication.devops.password=foobar -jar starter.jar
-    networks:
-      information_domain:
-        aliases:
-          - ditto-cluster
+    # only needed if DITTO_LOGGING_FILE_APPENDER is set
+    # volumes:
+    #  - ditto_log_files:/var/log/ditto
 
-  ditto-swaggerui:
+  ditto-swagger-ui:
     image: docker.io/swaggerapi/swagger-ui:v3.38.0
-    container_name: ditto_swaggerui
+    hostname: ditto-swagger-ui
     volumes:
-       - ./volumes/ditto/openapi:/usr/share/nginx/html/openapi:ro
-       - ./volumes/ditto/images:/usr/share/nginx/html/images:ro
-       - ./volumes/ditto/swagger3-index.html:/usr/share/nginx/html/index.html:ro
+       - ./volumes/ditto/swagger/openapi:/usr/share/nginx/html/openapi:ro
+       - ./volumes/ditto/swagger/images:/usr/share/nginx/html/images:ro
+       - ../volumes/ditto/swagger/swagger3-index.html:/usr/share/nginx/html/index.html:ro
     command: nginx -g 'daemon off;'
-    networks:
-      - information_domain
 
   ditto-nginx:
-    image: docker.io/nginx:1.19-alpine
-    container_name: ditto_nginx
+    image: docker.io/nginx:1.20-alpine
+    hostname: ditto-nginx
     volumes:
-       - ./volumes/ditto/nginx.conf:/etc/nginx/nginx.conf:ro
-       - ./volumes/ditto/nginx.htpasswd:/etc/nginx/nginx.htpasswd:ro
-       - ./volumes/ditto/nginx-cors.conf:/etc/nginx/nginx-cors.conf:ro
-       - ./volumes/ditto/index.html:/etc/nginx/html/index.html:ro
-       - ./volumes/ditto/images:/etc/nginx/html/images:ro
+       - ./volumes/ditto/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+       - ./volumes/ditto/nginx/nginx.htpasswd:/etc/nginx/nginx.htpasswd:ro
+       - ./volumes/ditto/nginx/nginx-cors.conf:/etc/nginx/nginx-cors.conf:ro
+       - ./volumes/ditto/nginx/index.html:/etc/nginx/html/index.html:ro
+       - ./volumes/ditto/swagger/images:/etc/nginx/html/images:ro
     ports:
       - "${DITTO_EXTERNAL_PORT:-8080}:80"
     depends_on:
       - ditto-gateway
-      - ditto-swaggerui
-    networks:
-      - information_domain
+      - ditto-swagger-ui
+
 #---------------------------------------- Kafka -----------------------------------------------------
 
   kafka1:
@@ -369,6 +404,7 @@ services:
       - wazuh
 
 #---------------------------------------- Wazuh ---------------------------------------------------------------
+
   wazuh:
     image: wazuh/wazuh-odfe:4.1.1
     hostname: wazuh
@@ -417,6 +453,12 @@ volumes:
   ossec_wodles:
   filebeat_etc:
   filebeat_var:
+  ditto_log_files:
+    driver: local
+    driver_opts:
+      type: none
+      device: /var/log/ditto
+      o: bind,uid=1000,gid=1000
 networks:
   information_domain:
     driver: bridge
