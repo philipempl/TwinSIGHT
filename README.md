@@ -39,6 +39,9 @@ If the Logstash pipeline files or the installation commands of individual plugin
 ```docker
 docker-compose up --build --force-recreate
 ```
+### Connections
+First you need to run the DevOps-Commands for Eclipse Ditto, namely Kafka and MQTT. You can find these commands under [Eclipse Ditto DevOps](https://www.eclipse.org/ditto/connectivity-manage-connections.html).
+
 ### Run the drill & mill machine client
 #### Dependencies
 ```python
