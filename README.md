@@ -1,6 +1,5 @@
 # TwinSIGHT
 
-[![Continuous Integration](https://github.com/philipempl/TwinSIGHT/actions/workflows/master.yml/badge.svg)](https://github.com/philipempl/TwinSIGHT/actions/workflows/master.yml)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/philipempl/TwinSIGHT.svg)](http://isitmaintained.com/project/philipempl/TwinSIGHT "Percentage of issues still open")
 [![GitHub forks](https://img.shields.io/github/forks/philipempl/TwinSIGHT)](https://github.com/philipempl/TwinSIGHT/network)
 [![GitHub stars](https://img.shields.io/github/stars/philipempl/TwinSIGHT)](https://github.com/philipempl/TwinSIGHT/stargazers)
@@ -26,6 +25,7 @@ docker run --rm -it --name dc -v ${pwd}:/input pmsipilot/docker-compose-viz rend
 | [Kafka UI](https://github.com/provectus/kafka-ui) |        latest  | Kafka UI simplifies the administration of a Kafka cluster by visualizing the Topics, Consumers, Producers and Brokers.
 | [Kibana](https://www.elastic.co/kibana) |        7.10.1     |Kibana is used for pure visualization of incoming data streams and batch data. Besides, users could also use machine learning algorithms to gain essential insights from the data. |
 | [Logstash](https://www.elastic.co/logstash) |        7.10.1 | Logstash collects the messages from the individual Kafka topics and, using various filters, can preprocess the data before it is stored in Elasticsearch. |
+| [Wazuh](https://wazuh.com/) |        4.1.2 | Wazuh is used to collect, aggregate, index and analyze security data and helps this framework detect intrusions, threats and behavioral anomalies.. |
 
 
 ## Deployment
@@ -39,6 +39,9 @@ If the Logstash pipeline files or the installation commands of individual plugin
 ```docker
 docker-compose up --build --force-recreate
 ```
+### Connections
+First you need to run the DevOps-Commands for Eclipse Ditto, namely Kafka and MQTT. You can find these commands under [Eclipse Ditto DevOps](https://www.eclipse.org/ditto/connectivity-manage-connections.html).
+
 ### Run the drill & mill machine client
 #### Dependencies
 ```python
