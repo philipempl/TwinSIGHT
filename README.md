@@ -1,6 +1,5 @@
 # TwinSIGHT
 
-[![Continuous Integration](https://github.com/philipempl/TwinSIGHT/actions/workflows/master.yml/badge.svg)](https://github.com/philipempl/TwinSIGHT/actions/workflows/master.yml)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/philipempl/TwinSIGHT.svg)](http://isitmaintained.com/project/philipempl/TwinSIGHT "Percentage of issues still open")
 [![GitHub forks](https://img.shields.io/github/forks/philipempl/TwinSIGHT)](https://github.com/philipempl/TwinSIGHT/network)
 [![GitHub stars](https://img.shields.io/github/stars/philipempl/TwinSIGHT)](https://github.com/philipempl/TwinSIGHT/stargazers)
