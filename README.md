@@ -26,6 +26,7 @@ docker run --rm -it --name dc -v ${pwd}:/input pmsipilot/docker-compose-viz rend
 | [Kafka UI](https://github.com/provectus/kafka-ui) |        latest  | Kafka UI simplifies the administration of a Kafka cluster by visualizing the Topics, Consumers, Producers and Brokers.
 | [Kibana](https://www.elastic.co/kibana) |        7.10.1     |Kibana is used for pure visualization of incoming data streams and batch data. Besides, users could also use machine learning algorithms to gain essential insights from the data. |
 | [Logstash](https://www.elastic.co/logstash) |        7.10.1 | Logstash collects the messages from the individual Kafka topics and, using various filters, can preprocess the data before it is stored in Elasticsearch. |
+| [Wazuh](https://wazuh.com/) |        4.1.2 | Wazuh is used to collect, aggregate, index and analyze security data and helps this framework detect intrusions, threats and behavioral anomalies.. |
 
 
 ## Deployment
