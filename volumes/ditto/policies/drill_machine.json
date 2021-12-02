@@ -1,0 +1,19 @@
+{
+    "policyId": "my.test:policy",
+    "attributes": {
+        "manufacturer": "Anonymous manufacturer",
+        "serial number": "100",
+        "location": "SISSeC Factory"
+    },
+    "features": {
+        "measurements": {
+            "properties": {
+                "temperature": 0,
+                "xcoordinate": 0,
+                "xcoordinate": 0,
+                "machine": 0,
+                "type": 0
+            }
+        }
+    }
+}

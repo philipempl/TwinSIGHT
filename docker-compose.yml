@@ -16,7 +16,7 @@ services:
 #---------------------------------------- MQTT Broker  --------------------------------------------------
 
   emqx:
-    image: emqx/emqx:4.2.7
+    image: emqx/emqx:${EMQX_VERSION}
     hostname: emqx
     container_name: emqx
     restart: always
@@ -30,7 +30,7 @@ services:
 #---------------------------------------- Ditto (Digital Twin) -------------------------------------------
 
   mongodb:
-    image: docker.io/mongo:4.2
+    image: docker.io/mongo:${MONGO_VERSION}
     networks:
       default:
         aliases:
@@ -43,7 +43,7 @@ services:
        TZ: Europe/Berlin
 
   policies:
-    image: docker.io/eclipse/ditto-policies:${DITTO_VERSION:-latest}
+    image: docker.io/eclipse/ditto-policies:${DITTO_VERSION}
     mem_limit: 512m
     networks:
       default:
@@ -66,7 +66,7 @@ services:
     #  - ditto_log_files:/var/log/ditto
 
   things:
-    image: docker.io/eclipse/ditto-things:${DITTO_VERSION:-latest}
+    image: docker.io/eclipse/ditto-things:${DITTO_VERSION}
     mem_limit: 512m
     networks:
       default:
@@ -91,7 +91,7 @@ services:
     #  - ditto_log_files:/var/log/ditto
 
   things-search:
-    image: docker.io/eclipse/ditto-things-search:${DITTO_VERSION:-latest}
+    image: docker.io/eclipse/ditto-things-search:${DITTO_VERSION}
     mem_limit: 512m
     networks:
       default:
@@ -116,7 +116,7 @@ services:
     #  - ditto_log_files:/var/log/ditto
 
   concierge:
-    image: docker.io/eclipse/ditto-concierge:${DITTO_VERSION:-latest}
+    image: docker.io/eclipse/ditto-concierge:${DITTO_VERSION}
     mem_limit: 512m
     networks:
       default:
@@ -141,7 +141,7 @@ services:
     #  - ditto_log_files:/var/log/ditto
 
   connectivity:
-    image: docker.io/eclipse/ditto-connectivity:${DITTO_VERSION:-latest}
+    image: docker.io/eclipse/ditto-connectivity:${DITTO_VERSION}
     mem_limit: 768m
     networks:
       default:
@@ -167,7 +167,7 @@ services:
     #  - ditto_log_files:/var/log/ditto
 
   gateway:
-    image: docker.io/eclipse/ditto-gateway:${DITTO_VERSION:-latest}
+    image: docker.io/eclipse/ditto-gateway:${DITTO_VERSION}
     mem_limit: 512m
     networks:
       default:
@@ -198,7 +198,7 @@ services:
     #  - ditto_log_files:/var/log/ditto
 
   swagger-ui:
-    image: docker.io/swaggerapi/swagger-ui:v3.38.0
+    image: docker.io/swaggerapi/swagger-ui:${SWAGGER_UI_VERSION}
     volumes:
        - ./volumes/ditto/resources/openapi:/usr/share/nginx/html/openapi:ro
        - ./volumes/ditto/resources/images:/usr/share/nginx/html/images:ro
@@ -222,7 +222,7 @@ services:
 #---------------------------------------- Kafka -----------------------------------------------------
 
   kafka1:
-    image: wurstmeister/kafka
+    image: wurstmeister/kafka:${KAFKA_VERSION}
     command: [start-kafka.sh]
     restart: always
     hostname: kafka1
@@ -248,7 +248,7 @@ services:
       - "zookeeper"
 
   kafka2:
-    image: wurstmeister/kafka
+    image: wurstmeister/kafka:${KAFKA_VERSION}
     command: [start-kafka.sh]
     restart: always
     hostname: kafka2
@@ -274,7 +274,7 @@ services:
       - "zookeeper"
 
   kafka3:
-    image: wurstmeister/kafka
+    image: wurstmeister/kafka:${KAFKA_VERSION}
     command: [start-kafka.sh]
     restart: always
     hostname: kafka3
@@ -300,7 +300,7 @@ services:
       - "zookeeper"
 
   kafka-ui:
-    image: provectuslabs/kafka-ui
+    image: provectuslabs/kafka-ui:${KAFKA_UI_VERSION}
     container_name: kafka-ui
     ports:
       - "9000:8080"
@@ -336,8 +336,8 @@ services:
       - "9300"
     environment:
       ES_JAVA_OPTS: "-Xmx512m -Xms512m"
-      ELASTIC_USERNAME: elastic
-      ELASTIC_PASSWORD: changeme
+      ELASTIC_USERNAME: ${ELASTIC_USERNAME}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
       # Use single node discovery in order to disable production mode and avoid bootstrap checks.
       # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
       discovery.type: single-node
@@ -398,7 +398,7 @@ services:
 #---------------------------------------- Wazuh ---------------------------------------------------------------
 
   wazuh:
-    image: wazuh/wazuh-odfe:4.1.1
+    image: wazuh/wazuh-odfe:${WAZUH_VERSION}
     hostname: wazuh
     container_name: wazuh
     restart: always
@@ -409,11 +409,11 @@ services:
       - "55000:55000"
     environment:
       ELASTICSEARCH_URL: "http://elasticsearch:9200"
-      ELASTIC_USERNAME: elastic
-      ELASTIC_PASSWORD: changeme
+      ELASTIC_USERNAME: ${ELASTIC_USERNAME}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
       FILEBEAT_SSL_VERIFICATION_MODE: none
-      API_USERNAME: "adlheid"                               # Wazuh API username
-      API_PASSWORD: "IacXSo?aDiQcixj9"
+      API_USERNAME: ${WAZUH_API_USERNAME}                            # Wazuh API username
+      API_PASSWORD: ${WAZUH_API_PASSWORD}
     volumes:
       - ossec_api_configuration:/var/ossec/api/configuration
       - ossec_etc:/var/ossec/etc

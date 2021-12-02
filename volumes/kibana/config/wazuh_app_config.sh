@@ -1,10 +1,10 @@
 #!/bin/bash
 # Wazuh Docker Copyright (C) 2021 Wazuh Inc. (License GPLv2)
 
-wazuh_url="${WAZUH_API_URL:-https://wazuh}"
-wazuh_port="${API_PORT:-55000}"
-api_username="${API_USERNAME:-wazuh-wui}"
-api_password="${API_PASSWORD:-wazuh-wui}"
+wazuh_url="${WAZU_API_HOSTNAME:-https://wazuh}"
+wazuh_port="${WAZUH_API_PORT:-55000}"
+api_username="${WAZUH_API_USERNAME:-wazuh-wui}"
+api_password="${WAZUH_API_PASSWORD:-wazuh-wui}"
 
 kibana_config_file="/usr/share/kibana/data/wazuh/config/wazuh.yml"
 
@@ -61,4 +61,4 @@ hosts:
 EOF
 else
   echo "Wazuh APP already configured"
-fi		
+fi
