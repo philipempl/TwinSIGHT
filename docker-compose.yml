@@ -6,8 +6,8 @@ services:
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
-    expose:
-      - "2181"
+    ports:
+      - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
     networks:
@@ -15,10 +15,10 @@ services:
 
 #---------------------------------------- MQTT Broker  --------------------------------------------------
 
-  emqx:
-    image: emqx/emqx:${EMQX_VERSION}
-    hostname: emqx
-    container_name: emqx
+  hivemq:
+    image: hivemq/hivemq-ce
+    hostname: hivemq
+    container_name: hivemq
     restart: always
     ports:
       - "1883:1883"
@@ -227,8 +227,8 @@ services:
     restart: always
     hostname: kafka1
     container_name: kafka1
-    expose:
-      - "9091"
+    ports:
+      - "9091:9091"
     environment:
       KAFKA_CREATE_TOPICS: "LENZDRGB610:1:1" # topic:partition:replicas
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -253,8 +253,8 @@ services:
     restart: always
     hostname: kafka2
     container_name: kafka2
-    expose:
-      - "9092"
+    ports:
+      - "9092:9092"
     environment:
       KAFKA_CREATE_TOPICS: "LENZDRGB610:1:1" # topic:partition:replicas
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -279,8 +279,8 @@ services:
     restart: always
     hostname: kafka3
     container_name: kafka3
-    expose:
-      - "9093"
+    ports:
+      - "9093:9093"
     environment:
       KAFKA_CREATE_TOPICS: "LENZDRGB610:1:1" # topic:partition:replicas
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -331,9 +331,9 @@ services:
       - type: volume
         source: elasticsearch
         target: /usr/share/elasticsearch/data
-    expose:
-      - "9200"
-      - "9300"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
     environment:
       ES_JAVA_OPTS: "-Xmx512m -Xms512m"
       ELASTIC_USERNAME: ${ELASTIC_USERNAME}
@@ -358,11 +358,11 @@ services:
         source: ./volumes/logstash/pipeline
         target: /usr/share/logstash/pipeline
         read_only: true
-    expose:
-      - "5044"
+    ports:
+      - "5044:5044"
       - "5000/tcp"
       - "5000/udp"
-      - "9600"
+      - "9600:9600"
     environment:
       LS_JAVA_OPTS: "-Xmx512m -Xms512m"
     networks:

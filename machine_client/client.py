@@ -2,26 +2,29 @@ import paho.mqtt.client as mqtt
 import time
 import json
 from random import seed
-from random import random
+import random
 seed(1)
 
 # default message
-msg_string = '{"temperature": 20, "xcoordinate": 0.08, "ycoordindate": 2.9", "machine": "LENZDRGB611", "type": "drill_mill_machine", "units":  {"temp": "° C"}}'
+msg_string = '{"thingId": "twin.sight:LENZDRGB610", "temperature": 20, "xcoordinate": 0.08, "ycoordindate": 2.9, "bit_length": 5}'
 msg_json = json.loads(msg_string)
 
 # mqtt broker host and port and establish connection
 broker = "localhost"
 port = 1883
 client = mqtt.Client()
-client.connect(broker, port, 60)
+client.connect(broker, port)
 
 def publish(client):
      while True:
          time.sleep(random.randint(1, 10))
-         msg_json["temp"] = round(random.uniform(20, 30), 2)
-         msg_json["xcoordinate"] = random()
-         msg_json["ycoordindate"] = random()
-         result = client.publish(msg_json["location"], json.dumps(msg_json))
+         msg_json["temperature"] = round(random.uniform(20, 30), 2)
+         msg_json["xcoordinate"] = round(random.uniform(0, 1), 4)
+         msg_json["ycoordindate"] = round(random.uniform(0, 1), 4)
+         msg_json["bit_length"] = round(random.uniform(10, 15), 4)
+
+         topic = msg_json["thingId"]
+         result = client.publish(topic, json.dumps(msg_json))
          # result: [0, 1]
          status = result[0]
          if status == 0:

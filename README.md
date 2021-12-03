@@ -14,7 +14,7 @@ Digital Twins map physical artifacts to virtual representations with a pre-defin
 | Technology                                             | Version |                                                                                                          Task                                                                                                         |
 | ------------------------------------------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [Docker](https://www.docker.com/)                      | latest  | Serves the underlying infrastructure to link the individual technologies in a modular way to make their use platform-independent and straightforward. This makes the deployment of the "Analytics Pipeline" a breeze. |
-| [EMQ X](https://www.emqx.io/)                          | latest  |               EMQ X is the messaging broker and the gateway into the analytics pipeline. EMQ X acts as a broker and connects all IoT devices and edge nodes using the MQTT protocol and specific topics.              |
+| [HiveMQ](https://www.hivemq.com/)                          | latest  |               HiveMQ's MQTT broker makes it easy to move data to and from connected devices in an efficient, fast and reliable manner.              |
 | [Eclipse Ditto](https://www.eclipse.org/ditto)         | 2.2.0   |                                  Abstract the device into a digital twin providing synchronous and asynchronous APIs and use the digital twin API to work with your physical device.                                  |
 | [Apache Zookeeper](https://zookeeper.apache.org/)      | latest  |                               Apache Zookeeper takes care of the administration of the distributed systems in the pipeline. In particular, this acts as a coordinator for Apache Kafka.                               |
 | [Apache Kafka](https://kafka.apache.org/)              | latest  |                                       Message broker cluster to structure the amount of heterogeneous data by topics and distribute it to various consumers, including Logstash.                                      |
@@ -50,7 +50,7 @@ If the Logstash pipeline files or the installation commands of individual plugin
 docker-compose up --build --force-recreate
 ```
 
-### Eclipse Ditto Connections & Policies
+### Eclipse Ditto Connections & Policies  
 First you need to run the DevOps-Commands for Eclipse Ditto, namely Kafka and MQTT. You can find these commands under [Eclipse Ditto DevOps](https://www.eclipse.org/ditto/connectivity-manage-connections.html). First jump into the policy directory:
 ```console
 cd /volumes/ditto/policies
@@ -67,7 +67,7 @@ Then push the main policy to Eclipse Ditto:
  ```console
   curl -X PUT 'http://localhost:8080/api/2/things/twin.sight:LENZDRGB610' -u 'ditto:ditto' -H 'Content-Type: application/json' -d '@thing-LENZDRGB610.json'
   ```
-You also need to connect to the EMQX broker:
+You also need to connect to the HiveMQ broker:
 ```console
  curl -X POST 'http://localhost:8080/devops/piggyback/connectivity?timeout=60' -u 'devops:foobar' -H 'Content-Type: application/json' -d '@connector-mqtt.json'
  ```
@@ -94,8 +94,7 @@ py /machine_client/client.py
 ```html
 http://localhost:5601 (Kibana/Wazuh)
 http://localhost:9000 (Kafka UI)
-http://localhost:18083 (EMQ X)
-http://localhost:8080 (Eclipse Ditto)
+http://localhost:8080 (Eclipse Ditto [username=ditto, password=ditto])
 ```
 
 Happy analyzing!
