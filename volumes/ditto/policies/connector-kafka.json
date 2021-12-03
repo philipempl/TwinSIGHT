@@ -1,0 +1,76 @@
+{
+   "targetActorSelection":"/system/sharding/connection",
+   "headers":{
+      "aggregate":false
+   },
+   "piggybackCommand":{
+      "type":"connectivity.commands:createConnection",
+      "connection":{
+         "id":"kafka-connection-source",
+         "connectionType":"kafka",
+         "connectionStatus":"open",
+         "failoverEnabled":true,
+         "uri":"tcp://localhost:9092",
+         "specificConfig":{
+            "bootstrapServers":"localhost:9092,other.host:9092",
+            "saslMechanism":"plain"
+         },
+         "sources":[
+            {
+               "addresses":[
+                  "theTopic"
+               ],
+               "consumerCount":1,
+               "qos":1,
+               "authorizationContext":[
+                  "ditto:inbound-auth-subject"
+               ],
+               "enforcement":{
+                  "input":"{{ header:device_id }}",
+                  "filters":[
+                     "{{ entity:id }}"
+                  ]
+               },
+               "headerMapping":{
+
+               },
+               "payloadMapping":[
+                  "Ditto"
+               ],
+               "replyTarget":{
+                  "enabled":true,
+                  "address":"theReplyTopic",
+                  "headerMapping":{
+
+                  },
+                  "expectedResponseTypes":[
+                     "response",
+                     "error",
+                     "nack"
+                  ]
+               },
+               "acknowledgementRequests":{
+                  "includes":[
+
+                  ]
+               },
+               "declaredAcks":[
+
+               ]
+            }
+         ],
+         "targets":[
+            {
+               "address":"topic/key",
+               "topics":[
+                  "_/_/things/twin/events",
+                  "_/_/things/live/messages"
+               ],
+               "authorizationContext":[
+                  "ditto:outbound-auth-subject"
+               ]
+            }
+         ]
+      }
+   }
+}

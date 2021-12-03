@@ -7,7 +7,7 @@
 
 ## Introduction
 
-Digital Twins map physical artifacts to virtual representations with a pre-defined fidelity and sharpen the bidirectional communication of the physical and virtual world in the Industrial IoT. Digital Twins also manage semantics, i.e., ontologies and relations between functional components and data. The Digital Twin is an ideal foundation to perform security analytics in the Industrial IoT. Security analytics is Big Data analytics from a cybersecurity perspective and aims at protecting devices by analyzing and correlating data from various data sources. Analytical results can be shared among lifecycles participants through Digital Twins to communicate the overall security state of a physical artifact. This repository presents a framework that integrates security analytics into a Digital Twin, enables the contextualization of data, and thus, converts data to knowledge about incidents. Thereby, this repository aims at providing insights through detective-analytical operations. 
+Digital Twins map physical artifacts to virtual representations with a pre-defined fidelity and sharpen the bidirectional communication of the physical and virtual world in the Industrial IoT. Digital Twins also manage semantics, i.e., ontologies and relations between functional components and data. The Digital Twin is an ideal foundation to perform security analytics in the Industrial IoT. Security analytics is Big Data analytics from a cybersecurity perspective and aims at protecting devices by analyzing and correlating data from various data sources. Analytical results can be shared among lifecycles participants through Digital Twins to communicate the overall security state of a physical artifact. This repository presents a framework that integrates security analytics into a Digital Twin, enables the contextualization of data, and thus, converts data to knowledge about incidents. Thereby, this repository aims at providing insights through detective-analytical operations.
 
 ## Tech stack
 
@@ -50,10 +50,31 @@ If the Logstash pipeline files or the installation commands of individual plugin
 docker-compose up --build --force-recreate
 ```
 
-### Connections
-
-First you need to run the DevOps-Commands for Eclipse Ditto, namely Kafka and MQTT. You can find these commands under [Eclipse Ditto DevOps](https://www.eclipse.org/ditto/connectivity-manage-connections.html).
-
+### Eclipse Ditto Connections & Policies
+First you need to run the DevOps-Commands for Eclipse Ditto, namely Kafka and MQTT. You can find these commands under [Eclipse Ditto DevOps](https://www.eclipse.org/ditto/connectivity-manage-connections.html). First jump into the policy directory:
+```console
+cd /volumes/ditto/policies
+```
+To enable curl in Windows, you need to run following command (optional: Windows only):
+```console
+Remove-item alias:curl
+```
+Then push the main policy to Eclipse Ditto:
+```console
+ curl -X PUT 'http://localhost:8080/api/2/policies/twin.sight:policy' -u 'ditto:ditto' -H 'Content-Type: application/json' -d '@policy-main.json'
+ ```
+ Afterwards you need to create the thing in Eclipse Ditto:
+ ```console
+  curl -X PUT 'http://localhost:8080/api/2/things/twin.sight:LENZDRGB610' -u 'ditto:ditto' -H 'Content-Type: application/json' -d '@thing-LENZDRGB610.json'
+  ```
+You also need to connect to the EMQX broker:
+```console
+ curl -X POST 'http://localhost:8080/devops/piggyback/connectivity?timeout=60' -u 'devops:foobar' -H 'Content-Type: application/json' -d '@connector-mqtt.json'
+ ```
+ Last you need to connect to Apache Kafka:
+ ```console
+  curl -X POST 'http://localhost:8080/devops/piggyback/connectivity?timeout=60' -u 'devops:foobar' -H 'Content-Type: application/json' -d '@connector-kafka.json'
+  ```
 ### Run the drill & mill machine client
 
 #### Dependencies

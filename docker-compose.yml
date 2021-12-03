@@ -48,7 +48,7 @@ services:
     networks:
       default:
         aliases:
-          - information_domain
+          - ditto-cluster
     environment:
       - TZ=Europe/Berlin
       - INSTANCE_INDEX=1
@@ -71,7 +71,7 @@ services:
     networks:
       default:
         aliases:
-          - information_domain
+          - ditto-cluster
     depends_on:
       - policies
     environment:
@@ -96,7 +96,7 @@ services:
     networks:
       default:
         aliases:
-          - information_domain
+          - ditto-cluster
     depends_on:
       - policies
     environment:
@@ -121,7 +121,7 @@ services:
     networks:
       default:
         aliases:
-          - information_domain
+          - ditto-cluster
     depends_on:
       - policies
     environment:
@@ -146,7 +146,7 @@ services:
     networks:
       default:
         aliases:
-          - information_domain
+          - ditto-cluster
     depends_on:
       - policies
       - concierge
@@ -172,7 +172,7 @@ services:
     networks:
       default:
         aliases:
-          - information_domain
+          - ditto-cluster
     depends_on:
       - policies
       - concierge

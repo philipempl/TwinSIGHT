@@ -1,5 +1,5 @@
 {
-    "policyId": "my.test:policy",
+    "policyId": "twin.sight:policy",
     "entries": {
         "owner": {
             "subjects": {

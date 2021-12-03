@@ -6,7 +6,7 @@ from random import random
 seed(1)
 
 # default message
-msg_string = '{"temp": 20, "xcoordinate": 0.08, "ycoordindate": 2.9", "machine": "LENZDRGB611", "type": "drill_mill_machine", "units":  {"temp": "° C"}}'
+msg_string = '{"temperature": 20, "xcoordinate": 0.08, "ycoordindate": 2.9", "machine": "LENZDRGB611", "type": "drill_mill_machine", "units":  {"temp": "° C"}}'
 msg_json = json.loads(msg_string)
 
 # mqtt broker host and port and establish connection

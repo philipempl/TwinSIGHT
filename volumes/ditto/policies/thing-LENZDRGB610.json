@@ -1,5 +1,6 @@
 {
-    "policyId": "my.test:policy",
+    "thingId": "twin.sight:LENZDRGB610",
+    "policyId": "twin.sight:policy",
     "attributes": {
         "manufacturer": "Anonymous manufacturer",
         "serial number": "100",
@@ -10,7 +11,7 @@
             "properties": {
                 "temperature": 0,
                 "xcoordinate": 0,
-                "xcoordinate": 0,
+                "ycoordinate": 0,
                 "machine": 0,
                 "type": 0
             }
