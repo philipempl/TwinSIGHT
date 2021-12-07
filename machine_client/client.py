@@ -17,7 +17,7 @@ client.connect(broker, port)
 
 def publish(client):
      while True:
-         time.sleep(random.randint(1, 2))
+         time.sleep(random.randint(1, 10))
          msg_json["temperature"] = round(random.uniform(20, 30), 2)
          msg_json["xcoordinate"] = round(random.uniform(0, 1), 4)
          msg_json["ycoordindate"] = round(random.uniform(0, 1), 4)
