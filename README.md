@@ -73,7 +73,7 @@ You also need to connect to the HiveMQ broker:
  ```console
   curl -X POST 'http://localhost:8080/devops/piggyback/connectivity?timeout=60' -u 'devops:foobar' -H 'Content-Type: application/json' -d '@./volumes/ditto/policies/connector-kafka.json'
   ```
-### Run the drill & mill machine client
+### Run the Drill & Mill Machine Client
 
 #### Dependencies
 
@@ -96,7 +96,8 @@ http://localhost:8080 (Eclipse Ditto [username=ditto, password=ditto])
 ```
 
 Happy analyzing!
-
+![alt text](https://github.com/philipempl/TwinSIGHT/blob/master/resources/screenshot.png)
+The template can be found in /volumes/kibana/dashboards.
 ## Authors
 
 -   **Philip Empl** - [Department of Information Systems](https://www.uni-regensburg.de/wirtschaftswissenschaften/wi-pernul/team/philip-empl/index.html)  *@ University of Regensburg*
