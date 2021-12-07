@@ -6,7 +6,7 @@ import random
 seed(1)
 
 # default message
-msg_string = '{"thingId": "twin.sight:LENZDRGB610", "temperature": 20, "xcoordinate": 0.08, "ycoordindate": 2.9, "bit_length": 5}'
+msg_string = '{"thingId": "twin.sight:LENZDRGB610", "temperature": 20, "xcoordinate": 0.08, "ycoordinate": 2.9, "bit_length": 5}'
 msg_json = json.loads(msg_string)
 
 # mqtt broker host and port and establish connection

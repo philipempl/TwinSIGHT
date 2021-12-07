@@ -51,29 +51,27 @@ docker-compose up --build --force-recreate
 ```
 
 ### Eclipse Ditto Connections & Policies  
-First you need to run the DevOps-Commands for Eclipse Ditto, namely Kafka and MQTT. You can find these commands under [Eclipse Ditto DevOps](https://www.eclipse.org/ditto/connectivity-manage-connections.html). First jump into the policy directory:
-```console
-cd /volumes/ditto/policies
-```
+First you need to run the DevOps-Commands for Eclipse Ditto, namely Kafka and MQTT. You can find these commands under [Eclipse Ditto DevOps](https://www.eclipse.org/ditto/connectivity-manage-connections.html).
+
 To enable curl in Windows, you need to run following command (optional: Windows only):
 ```console
 Remove-item alias:curl
 ```
 Then push the main policy to Eclipse Ditto:
 ```console
- curl -X PUT 'http://localhost:8080/api/2/policies/twin.sight:policy' -u 'ditto:ditto' -H 'Content-Type: application/json' -d '@policy-main.json'
+ curl -X PUT 'http://localhost:8080/api/2/policies/twin.sight:policy' -u 'ditto:ditto' -H 'Content-Type: application/json' -d '@./volumes/ditto/policies/policy-main.json'
  ```
- Afterwards you need to create the thing in Eclipse Ditto:
+ Afterwards you need to create the drill and mill machine LENZDRGB610 in Eclipse Ditto:
  ```console
-  curl -X PUT 'http://localhost:8080/api/2/things/twin.sight:LENZDRGB610' -u 'ditto:ditto' -H 'Content-Type: application/json' -d '@thing-LENZDRGB610.json'
+  curl -X PUT 'http://localhost:8080/api/2/things/twin.sight:LENZDRGB610' -u 'ditto:ditto' -H 'Content-Type: application/json' -d '@./volumes/ditto/policies/thing-LENZDRGB610.json'
   ```
 You also need to connect to the HiveMQ broker:
 ```console
- curl -X POST 'http://localhost:8080/devops/piggyback/connectivity?timeout=60' -u 'devops:foobar' -H 'Content-Type: application/json' -d '@connector-mqtt.json'
+ curl -X POST 'http://localhost:8080/devops/piggyback/connectivity?timeout=60' -u 'devops:foobar' -H 'Content-Type: application/json' -d '@./volumes/ditto/policies/connector-mqtt.json'
  ```
  Last you need to connect to Apache Kafka:
  ```console
-  curl -X POST 'http://localhost:8080/devops/piggyback/connectivity?timeout=60' -u 'devops:foobar' -H 'Content-Type: application/json' -d '@connector-kafka.json'
+  curl -X POST 'http://localhost:8080/devops/piggyback/connectivity?timeout=60' -u 'devops:foobar' -H 'Content-Type: application/json' -d '@./volumes/ditto/policies/connector-kafka.json'
   ```
 ### Run the drill & mill machine client
 
@@ -86,7 +84,7 @@ pip install -r requirements.txt
 #### Command
 
 ```python
-py /machine_client/client.py
+py ./machine_client/client.py
 ```
 
 ### Call the UIs

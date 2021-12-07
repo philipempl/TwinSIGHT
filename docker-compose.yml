@@ -11,7 +11,9 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
     networks:
-      - information_domain
+      default:
+        aliases:
+          - zookeeper
 
 #---------------------------------------- MQTT Broker  --------------------------------------------------
 
@@ -25,7 +27,9 @@ services:
       - "8883:8883"
       - "18083:18083"
     networks:
-      - information_domain
+      default:
+        aliases:
+          - hivemq
 
 #---------------------------------------- Ditto (Digital Twin) -------------------------------------------
 
@@ -57,13 +61,13 @@ services:
       - MONGO_DB_HOSTNAME=mongodb
       # in order to write logs into a file you can enable this by setting the following env variable
       # the log file(s) can be found in /var/log/ditto directory on the host machine
-      # - DITTO_LOGGING_FILE_APPENDER=true
+      - DITTO_LOGGING_FILE_APPENDER=true
     # Set additional configuration options here
     # -Dditto.policies...
     command: java -jar starter.jar
     # only needed if DITTO_LOGGING_FILE_APPENDER is set
-    # volumes:
-    #  - ditto_log_files:/var/log/ditto
+    volumes:
+      - ./volumes/ditto/logs:/var/log/ditto
 
   things:
     image: docker.io/eclipse/ditto-things:${DITTO_VERSION}
@@ -82,13 +86,13 @@ services:
       - MONGO_DB_HOSTNAME=mongodb
       # in order to write logs into a file you can enable this by setting the following env variable
       # the log file(s) can be found in /var/log/ditto directory on the host machine
-      # - DITTO_LOGGING_FILE_APPENDER=true
+      - DITTO_LOGGING_FILE_APPENDER=true
     # Set additional configuration options here
     # -Dditto.things...
     command: java -jar starter.jar
     # only needed if DITTO_LOGGING_FILE_APPENDER is set
-    # volumes:
-    #  - ditto_log_files:/var/log/ditto
+    volumes:
+      - ./volumes/ditto/logs:/var/log/ditto
 
   things-search:
     image: docker.io/eclipse/ditto-things-search:${DITTO_VERSION}
@@ -107,13 +111,13 @@ services:
       - MONGO_DB_HOSTNAME=mongodb
       # in order to write logs into a file you can enable this by setting the following env variable
       # the log file(s) can be found in /var/log/ditto directory on the host machine
-      # - DITTO_LOGGING_FILE_APPENDER=true
+      - DITTO_LOGGING_FILE_APPENDER=true
     # Set additional configuration options here
     # -Dditto.things-search...
     command: java -jar starter.jar
     # only needed if DITTO_LOGGING_FILE_APPENDER is set
-    # volumes:
-    #  - ditto_log_files:/var/log/ditto
+    volumes:
+      - ./volumes/ditto/logs:/var/log/ditto
 
   concierge:
     image: docker.io/eclipse/ditto-concierge:${DITTO_VERSION}
@@ -132,13 +136,13 @@ services:
       - MONGO_DB_HOSTNAME=mongodb
       # in order to write logs into a file you can enable this by setting the following env variable
       # the log file(s) can be found in /var/log/ditto directory on the host machine
-      # - DITTO_LOGGING_FILE_APPENDER=true
+      - DITTO_LOGGING_FILE_APPENDER=true
     # Set additional configuration options here
     # -Dditto.concierge...
     command: java -jar starter.jar
     # only needed if DITTO_LOGGING_FILE_APPENDER is set
-    # volumes:
-    #  - ditto_log_files:/var/log/ditto
+    volumes:
+      - ./volumes/ditto/logs:/var/log/ditto
 
   connectivity:
     image: docker.io/eclipse/ditto-connectivity:${DITTO_VERSION}
@@ -158,13 +162,13 @@ services:
       - MONGO_DB_HOSTNAME=mongodb
       # in order to write logs into a file you can enable this by setting the following env variable
       # the log file(s) can be found in /var/log/ditto directory on the host machine
-      # - DITTO_LOGGING_FILE_APPENDER=true
+      - DITTO_LOGGING_FILE_APPENDER=true
     # Set additional configuration options here
     # -Dditto.connectivity...
     command: java -jar starter.jar
     # only needed if DITTO_LOGGING_FILE_APPENDER is set
-    #volumes:
-    #  - ditto_log_files:/var/log/ditto
+    volumes:
+      - ./volumes/ditto/logs:/var/log/ditto
 
   gateway:
     image: docker.io/eclipse/ditto-gateway:${DITTO_VERSION}
@@ -186,7 +190,7 @@ services:
       - OPENJ9_JAVA_OPTIONS=-XX:+ExitOnOutOfMemoryError -Xtune:virtualized -Xss512k -XX:MaxRAMPercentage=80 -Dakka.coordinated-shutdown.exit-jvm=on -Dakka.cluster.shutdown-after-unsuccessful-join-seed-nodes=120s
       # in order to write logs into a file you can enable this by setting the following env variable
       # the log file(s) can be found in /var/log/ditto directory on the host machine
-      # - DITTO_LOGGING_FILE_APPENDER=true
+      - DITTO_LOGGING_FILE_APPENDER=true
       # You may use the environment for setting the devops password
       #- DEVOPS_PASSWORD=foobar
     # Set additional configuration options here
@@ -194,8 +198,8 @@ services:
     # Setting the devops password via java VM environment
     command: java -Dditto.gateway.authentication.devops.password=foobar -jar starter.jar
     # only needed if DITTO_LOGGING_FILE_APPENDER is set
-    # volumes:
-    #  - ditto_log_files:/var/log/ditto
+    volumes:
+      - ./volumes/ditto/logs:/var/log/ditto
 
   swagger-ui:
     image: docker.io/swaggerapi/swagger-ui:${SWAGGER_UI_VERSION}
@@ -239,7 +243,9 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
-      - information_domain
+      default:
+        aliases:
+          - kafka1
     volumes:
       - ./volumes/kafka1/data:/var/lib/kafka/data
     depends_on:
@@ -265,7 +271,9 @@ services:
       KAFKA_BROKER_ID: 2
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
-      - information_domain
+      default:
+        aliases:
+          - kafka2
     volumes:
       - ./volumes/kafka2/data:/var/lib/kafka/data
     depends_on:
@@ -291,7 +299,9 @@ services:
       KAFKA_BROKER_ID: 3
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
-      - information_domain
+      default:
+        aliases:
+          - kafka3
     volumes:
       - ./volumes/kafka3/data:/var/lib/kafka/data
     depends_on:
@@ -310,7 +320,9 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:19091
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
     networks:
-      - information_domain
+      default:
+        aliases:
+          - kafka-ui
     depends_on:
       - kafka1
       - kafka2
@@ -342,7 +354,9 @@ services:
       # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
       discovery.type: single-node
     networks:
-      - information_domain
+      default:
+        aliases:
+          - elasticsearch
 
   logstash:
     hostname: logstash
@@ -366,7 +380,9 @@ services:
     environment:
       LS_JAVA_OPTS: "-Xmx512m -Xms512m"
     networks:
-      - information_domain
+      default:
+        aliases:
+          - logstash
     depends_on:
       - elasticsearch
       - kafka1
@@ -389,8 +405,9 @@ services:
     ports:
       - "5601:5601"
     networks:
-      - business_domain
-      - information_domain
+      default:
+        aliases:
+          - kibana
     depends_on:
       - elasticsearch
       - wazuh
@@ -429,7 +446,9 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - information_domain
+      default:
+        aliases:
+          - wazuh
 #---------------------------------------- Volumes and Networks ------------------------------------------------
 
 volumes:
@@ -451,9 +470,3 @@ volumes:
       type: none
       device: /var/log/ditto
       o: bind,uid=1000,gid=1000
-
-networks:
-  information_domain:
-    driver: bridge
-  business_domain:
-    driver: bridge
