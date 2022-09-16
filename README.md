@@ -96,7 +96,7 @@ http://localhost:8080 (Eclipse Ditto [username=ditto, password=ditto])
 ```
 
 Happy analyzing!
-![alt text](https://github.com/philipempl/TwinSIGHT/blob/master/resources/screenshot.png)
+![alt text](https://raw.githubusercontent.com/philipempl/TwinSIGHT/main/resources/screenshot.png)
 The template can be found in /volumes/kibana/dashboards.
 ## Authors
 
