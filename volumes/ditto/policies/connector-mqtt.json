@@ -1,0 +1,36 @@
+{
+    "targetActorSelection": "/system/sharding/connection",
+    "headers": {
+    	"aggregate": false
+    },
+    "piggybackCommand": {
+        "type": "connectivity.commands:createConnection",
+        "connection": {
+            "id": "mqtt-connector-source",
+            "connectionType": "mqtt",
+            "connectionStatus": "open",
+            "failoverEnabled": true,
+            "uri": "tcp://hivemq:1883",
+            "sources": [{
+                "addresses": ["#"],
+                "authorizationContext": ["nginx:ditto"],
+                "qos": 1
+            }],
+            "targets": [{
+                "address": "{{ thing:id }}",
+                "topics": [
+                "_/_/things/twin/events",
+                "_/_/things/live/messages"
+                ],
+                "authorizationContext": ["nginx:ditto"],
+                "qos": 0
+            }],
+              "mappingContext": {
+                "mappingEngine": "JavaScript",
+                "options": {
+                    "incomingScript": "function mapToDittoProtocolMsg(headers, textPayload, bytePayload, contentType) { const jsonData = JSON.parse(textPayload); const thingId = jsonData.thingId.split(':'); const new_value = {measurements:{properties:{temperature:jsonData.temperature,xcoordinate:jsonData.xcoordinate,ycoordinate:jsonData.ycoordinate,bit_length:jsonData.bit_length}}}; return Ditto.buildDittoProtocolMsg('twin.sight', 'LENZDRGB610', 'things', 'twin', 'commands', 'modify', '/features', headers, new_value);}"
+            }
+        }
+    }
+}
+}

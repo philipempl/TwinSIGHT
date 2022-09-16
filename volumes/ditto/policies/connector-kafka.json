@@ -1,0 +1,31 @@
+{
+   "targetActorSelection":"/system/sharding/connection",
+   "headers":{
+      "aggregate":false
+   },
+   "piggybackCommand":{
+      "type":"connectivity.commands:createConnection",
+      "connection":{
+         "id":"kafka-connectiossn-target",
+         "connectionType":"kafka",
+         "connectionStatus":"open",
+         "failoverEnabled":true,
+         "uri":"tcp://kafka1:19091",
+         "specificConfig":{
+            "bootstrapServers":"kafka1:19091,kafka2:19092,kafka3:19093",
+            "saslMechanism":"plain"
+         },
+         "sources":[],
+         "targets":[
+            {
+               "address":"{{ thing:name  }}",
+               "topics":[
+                  "_/_/things/twin/events",
+                  "_/_/things/live/messages"
+               ],
+               "authorizationContext":["nginx:ditto"]
+            }
+         ]
+      }
+   }
+}

@@ -1,0 +1,21 @@
+{
+    "thingId": "twin.sight:LENZDRGB610",
+    "policyId": "twin.sight:policy",
+    "attributes": {
+        "manufacturer": "Ernst Lenz Maschinenbau GmbH",
+        "serial number": "9202_728a_s8a3_8289",
+        "location": "SISSeC Factory",
+        "machine": "DRB 610 1+1 Serie",
+        "type": "Drill & Mill Machine"
+    },
+    "features": {
+        "measurements": {
+            "properties": {
+                "temperature": 0,
+                "xcoordinate": 0,
+                "ycoordinate": 0,
+                "bit_length": 0
+            }
+        }
+    }
+}
