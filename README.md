@@ -7,7 +7,7 @@
 
 ## Introduction
 
-Groups become more organized, and opaque supply chains enable them to enter Internet of Things (IoT) systems. Cybersecurity knowledge is becoming increasingly valuable, and only through the collaborative generation and sharing of knowledge, the IoT can be kept secure. Security analytics is a collection of capabilities and technologies that systematically process and analyze data to detect or anticipate threats and imminent incidents. Digital twins are an ideal foundation for security analytics in the IoT as they enhance knowledge generation and sharing. Digital twins map physical assets to their respective virtual counterparts along the lifecycle. They exploit the connection between the physical and virtual environment and manage semantical data, i.e., ontologies, functional relationships, and behavioral models. This paper presents a framework that enables the alignment of security analytics into digital twins generating cybersecurity knowledge to be shared. The framework is grounded on a formal model that results from requirements. We further validate the framework by a proof-of-concept implementation called TwinSIGHT, which is publicly available and based on a real-world industrial project.  Results show the feasibility of exploiting knowledge in the IoT.This  repository aims at providing insights through detective-analytical capabilities.
+ Although there are numerous advantages of the IoT in industrial use, there are also some security problems, such as insecure supply chains or vulnerabilities. These lead to a threatening security posture in organizations. Security analytics is a collection of capabilities and technologies systematically processing and analyzing data to detect or predict threats and imminent incidents. As digital twins improve knowledge generation and sharing, they are an ideal foundation for security analytics in the IoT. Digital twins map physical assets to their respective virtual counterparts along the lifecycle. They leverage the connection between the physical and virtual environments and manage semantics, i.e., ontologies, functional relationships, and behavioral models. This paper presents the DT2SA model that aligns security analytics with digital twins to generate shareable cybersecurity knowledge. The model relies on a formal model resulting from previously defined requirements. We validated the DT2SA model with a microservice architecture called Twinsight, which is publicly available, open-source, and based on a real industry project. The results highlight challenges and strategies for leveraging cybersecurity knowledge in IoT using digital twins.
 
 ## Tech stack
 
@@ -98,8 +98,26 @@ http://localhost:8080 (Eclipse Ditto [username=ditto, password=ditto])
 Happy analyzing!
 ![alt text](https://raw.githubusercontent.com/philipempl/TwinSIGHT/main/resources/screenshot.png)
 The template can be found in /volumes/kibana/dashboards.
-## Authors
 
+## Research and Citation
+Please consider citing our publication if you are using our **TwinSIGHT** prototype for your research: https://www.doi.org/10.3390/info14020095 
+
+```bib
+@Article{Empl2023,
+author = {Empl, Philip and Pernul, G{\"u}nther},
+title = {Digital-Twin-Based Security Analytics for the Internet of Things},
+journal = {Information},
+volume = {14},
+year = {2023},
+number = {2},
+article-number = {95},
+url = {https://www.mdpi.com/2078-2489/14/2/95},
+issn = {2078-2489},
+doi = {10.3390/info14020095}
+}
+```
+
+## Authors
 -   **Philip Empl** - [Department of Information Systems](https://www.uni-regensburg.de/wirtschaftswissenschaften/wi-pernul/team/philip-empl/index.html)  *@ University of Regensburg*
 
 ## License
